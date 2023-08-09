@@ -1,0 +1,46 @@
+name: Generate release of Sarasa-Gothic (sc gothic fixed only)
+run-name: Generate release of Sarasa-Gothic (sc gothic fixed only)
+on:
+  push:
+    tags:
+      - '*'
+jobs:
+  gen-sarasa-gothic-release:
+    runs-on: ubuntu-latest
+    steps:
+      # https://github.com/actions/upload-release-asset
+      - name: Checkout code
+        uses: actions/checkout@v2
+      # https://stackoverflow.com/a/70903031
+      - name: Install 7z
+        run: sudo apt install p7zip-full
+      - name: Download files
+        run: wget $(curl -s "https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest" | grep "sarasa-gothic-ttf-0" | awk --field-separator \" '/browser_download_url/ {print $(NF-1)}')
+      - name: Extract 7z
+        run: 7z x *.7z
+      - name: Remove unused
+        run: rm -f *-cl-* *-hc-* *-tc-* *-j-* *-k-* *-ui-* *-mono-* *-term-* *-slab-*
+      - name: Create 7z
+        run: 7z a Sarasa-Gothic.7z *.ttf
+      # https://github.com/marketplace/actions/create-a-release-in-a-github-action
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+      # https://github.com/actions/upload-release-asset
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: ./Sarasa-Gothic.7z
+          asset_name: Sarasa-Gothic.7z
+          asset_content_type: application/x-7z-compressed
