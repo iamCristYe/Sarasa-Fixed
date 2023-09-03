@@ -1,5 +1,5 @@
-# Sarasa-Gothic
+# Sarasa-Fixed
 
-Gen 7z of ttf of Sarasa-Gothic (sc gothic fixed only)
+Gen 7z of ttf of Sarasa-Gothic (sc fixed only)
 
-Updated Aug 2023.
+Updated Sep 2023.
