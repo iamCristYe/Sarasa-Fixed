@@ -2,4 +2,4 @@
 
 Gen 7z of ttf of Sarasa-Gothic (sc fixed only)
 
-Updated Oct 2023.
+Updated Nov 2023.
