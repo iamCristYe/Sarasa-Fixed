@@ -15,11 +15,13 @@ jobs:
       - name: Install 7z
         run: sudo apt install p7zip-full
       - name: Download files
-        run: wget $(curl -s "https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest" | grep "sarasa-gothic-ttf-0" | awk --field-separator \" '/browser_download_url/ {print $(NF-1)}')
+        run: wget $(curl -s "https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest" | grep "Sarasa-TTF" | awk --field-separator \" '/browser_download_url/ {print $(NF-1)}')
+      - name: Remove Unhinted
+        run: rm *Unhinted*
       - name: Extract 7z
-        run: 7z x *.7z
-      - name: Remove unused
-        run: rm -f *-cl-* *-hc-* *-tc-* *-j-* *-k-* *-ui-* *-mono-* *-term-* *-slab-* *-gothic-*
+        run: 7z x *.7z SarasaTermSC*
+      - name: List files
+        run: ls -h -l
       - name: Create 7z
         run: 7z a Sarasa-Fixed.7z *.ttf
       # https://github.com/marketplace/actions/create-a-release-in-a-github-action
